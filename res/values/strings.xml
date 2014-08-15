@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">netwrk</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="string_loginTitle">aquainted</string>
+    <string name="string_loginLogin">Login</string>
+    <string name="string_homeConnections">Connections</string>
+    <string name="string_homeAquiantances">Aquaintances</string>
+    <string name="string_homeSettings">Settings</string>
+    <string name="string_homeConnect">Connect</string>
+    <string name="string_homeIndicator">Active!</string>
+    <string name="string_loginLinkedIn">LinkedIn</string>
+    <string name="string_loginRegister">Register</string>
+    <string name="string_registerTitle">Register Account</string>
+    <string name="string_registerUsername">Username</string>
+    <string name="string_registerPassword">Password</string>
+    <string name="string_registerFirstName">First Name</string>
+    <string name="string_registerLastName">Last Name</string>
+    <string name="string_registerEmail">Email Address</string>
+    <string name="string_registerRegister">Register</string>
+    <string name="string_registerPasswordConfirm">Confirm Password</string>
+
+</resources>
