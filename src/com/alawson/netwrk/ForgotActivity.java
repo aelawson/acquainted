@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -17,57 +16,41 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class RegisterActivity extends ActionBarActivity {
+public class ForgotActivity extends ActionBarActivity {
 	
-	private static final String KEY_USERNAME 			= "username";
-	private static final String KEY_PASSWORD			= "password";
-	private static final String KEY_FNAME 				= "firstname";
-	private static final String KEY_LNAME 				= "lastname";
-	private static final String KEY_EMAIL 				= "email";
-	private static final String KEY_ERROR = "error";
+	private static final String KEY_USERNAME = "username";
+	private static final String KEY_EMAIL = "email";
 	private static final String KEY_MESSAGE = "message";
 	private static final String URL_DATABASE = "http://www.aquainted.andrewlawson.us/index.php";
 	
-	EditText fieldUsername, fieldPassword, fieldPasswordConfirm, fieldFirstName, fieldLastName, fieldEmail;
-	Button buttonRegister;
+	EditText fieldUsername, fieldEmail;
+	Button buttonForgot;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_register);
+		setContentView(R.layout.activity_forgot);
 		// Input fields
-		fieldUsername = (EditText) findViewById(R.id.editText_registerUsername);
-		fieldPassword = (EditText) findViewById(R.id.editText_registerPassword);
-		fieldPasswordConfirm = (EditText) findViewById(R.id.editText_registerPasswordConfirm);
-		fieldFirstName = (EditText) findViewById(R.id.editText_registerFirstName);
-		fieldLastName = (EditText) findViewById(R.id.editText_registerLastName);
-		fieldEmail = (EditText) findViewById(R.id.editText_registerEmail);
+		fieldUsername = (EditText) findViewById(R.id.editText_forgotUsername);
+		fieldEmail = (EditText) findViewById(R.id.editText_forgotEmail);
 		// Registration button leads to account creation
-		buttonRegister = (Button) findViewById(R.id.button_registerRegister);
-		buttonRegister.setOnClickListener(new View.OnClickListener() {
+		buttonForgot = (Button) findViewById(R.id.button_forgotForgot);
+		buttonForgot.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if (fieldUsername.getText().toString() != "" && fieldPassword.getText().toString() != "" &&
-					fieldPasswordConfirm.toString() != "" && fieldEmail.getText().toString() != "" &&
-					fieldFirstName.getText().toString() != "" && fieldLastName.getText().toString() != "") {
-						if (!fieldPassword.getText().toString().equals(fieldPasswordConfirm.toString())) {
-							Toast.makeText(getApplicationContext(), "Passwords do not match.", Toast.LENGTH_SHORT).show();
-						}
-						else {
-							new RegisterAccount().execute();
-						}
+				if (fieldUsername.getText().toString() != "" && fieldEmail.getText().toString() != "") {
+					new forgotAccount().execute();
 				}
 				else {
 					Toast.makeText(getApplicationContext(), "One or more fields are empty.", Toast.LENGTH_SHORT).show();
@@ -75,29 +58,26 @@ public class RegisterActivity extends ActionBarActivity {
 			}
 		});
 	}
-	public class RegisterAccount extends AsyncTask<Object, Void, JSONObject> {
-		ProgressDialog dialogRegister;
+	public class forgotAccount extends AsyncTask<Object, Void, JSONObject> {
+		ProgressDialog dialogForgot;
 		InputStream inputStream;
 		@Override
 		protected void onPreExecute() {
-			dialogRegister = new ProgressDialog(RegisterActivity.this);
-			dialogRegister.setTitle("Registration");
-			dialogRegister.setMessage("Registering account...");
-			dialogRegister.setIndeterminate(false);
-			dialogRegister.setCancelable(true);
-			dialogRegister.show();
+			dialogForgot = new ProgressDialog(ForgotActivity.this);
+			dialogForgot.setTitle("Forgot password.");
+			dialogForgot.setMessage("Resetting password...");
+			dialogForgot.setIndeterminate(false);
+			dialogForgot.setCancelable(true);
+			dialogForgot.show();
 		}
 		@Override
 		protected JSONObject doInBackground(Object... params) {
-			JSONObject jsonRegister = null;
+			JSONObject jsonforgot = null;
 			String responseString = null;
 			List<NameValuePair> parameters = new ArrayList<NameValuePair>();
-			parameters.add(new BasicNameValuePair("request", "register"));
+			parameters.add(new BasicNameValuePair("request", "forgot"));
 			parameters.add(new BasicNameValuePair(KEY_USERNAME, fieldUsername.getText().toString()));
-			parameters.add(new BasicNameValuePair(KEY_PASSWORD, fieldPassword.getText().toString()));
 			parameters.add(new BasicNameValuePair(KEY_EMAIL, fieldEmail.getText().toString()));
-			parameters.add(new BasicNameValuePair(KEY_FNAME, fieldFirstName.getText().toString()));
-			parameters.add(new BasicNameValuePair(KEY_LNAME, fieldLastName.getText().toString()));
 			try {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 				HttpPost httpPost = new HttpPost(URL_DATABASE);
@@ -126,27 +106,26 @@ public class RegisterActivity extends ActionBarActivity {
 				e.printStackTrace();
 			}
 			try {
-				jsonRegister = new JSONObject(responseString);
+				jsonforgot = new JSONObject(responseString);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			return jsonRegister;
+			return jsonforgot;
 		}
 		@Override
 		protected void onPostExecute(JSONObject jsonResponse) {
 			try {
 				String responseMessage = jsonResponse.getString(KEY_MESSAGE);
-				dialogRegister.setMessage(responseMessage);
-				CountDownTimer timer = new CountDownTimer(1000, 1000) {
+				CountDownTimer timer = 	new CountDownTimer(2000, 1000) {
 			        @Override
 			        public void onTick(long millisUntilFinished) {
 			        }
 			        @Override
 			        public void onFinish() {
-			        	dialogRegister.dismiss();
+			        	dialogForgot.dismiss();
 			        }
 			    };
-				dialogRegister.setMessage(responseMessage);
+				dialogForgot.setMessage(responseMessage);
 				timer.start();
 			}
 			catch (JSONException e) {
